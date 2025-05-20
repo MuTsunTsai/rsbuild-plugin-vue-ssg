@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { createSSRApp } from "vue";
 import { renderToString } from "vue/server-renderer";
 import { minify } from "html-minifier-terser";
-
 import { Module } from "node:module";
-
 import jsdom from "global-jsdom";
 
 import type { App } from "vue";
@@ -59,7 +59,7 @@ export interface PluginVueSSGOptions {
 	 * Whether to register jsdom.
 	 * Pass in a function for additional setups for the `globalThis` object.
 	 */
-	jsdom?: boolean | ((global: Record<string, unknown>) => void);
+	jsdom?: boolean | ((global: any) => void);
 }
 
 const HtmlRegex = /\.html?$/i;
@@ -87,7 +87,6 @@ export const pluginVueSSG = (options: PluginVueSSGOptions): RsbuildPlugin => ({
 			}
 		});
 
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const ModuleConstructor = Module as any;
 		const paths = ModuleConstructor._nodeModulePaths(process.cwd());
 		const results: Record<string, string> = {};
