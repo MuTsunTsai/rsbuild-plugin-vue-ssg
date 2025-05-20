@@ -9,8 +9,9 @@ import jsdom from "global-jsdom";
 import type { App } from "vue";
 import type { EnvironmentConfig, RsbuildConfig, RsbuildEntry, RsbuildPlugin, RsbuildPluginAPI } from "@rsbuild/core";
 import type { ExternalItem } from "@rspack/core";
+import type { Options as HtmlMinifierOptions } from "html-minifier-terser";
 
-const htmlMinOption = {
+const htmlMinOption: HtmlMinifierOptions = {
 	collapseWhitespace: true,
 	removeComments: true,
 	minifyJS: {
@@ -27,6 +28,8 @@ export interface PluginVueSSGOptions {
 
 	/**
 	 * The entry SFC components corresponding to the web entries of Rsbuild.
+	 * Those web entries without a corresponding entry here will not be injected
+	 * (but will still be minified if enabled).
 	 */
 	entry: RsbuildEntry;
 
@@ -37,27 +40,49 @@ export interface PluginVueSSGOptions {
 	externals?: ExternalItem[];
 
 	/**
-	 * Whether to minify the HTML (true by default).
+	 * Whether to minify the HTML.
 	 *
-	 * The minification will take place BEFORE inserting the SSG contents,
+	 * The minification will take place BEFORE injecting the SSG contents,
 	 * since the SSG contents typically includes HTML comment placeholders.
+	 * This feature internally uses `html-minifier-terser`,
+	 * and you can also pass in an object to customize it.
+	 * 
+	 * @see https://www.npmjs.com/package/html-minifier-terser
+	 * @default
+	 * ```js
+	 * {
+	 * 	collapseWhitespace: true,
+	 * 	collapseWhitespace: true,
+	 * 	minifyJS: {
+	 * 		ie8: true
+	 * 	}
+	 * }
+	 * ```
 	 */
-	minify?: boolean;
+	minify?: boolean | HtmlMinifierOptions;
 
 	/**
-	 * Where to insert the SSG contents. The default value is `__VUE_SSG__`.
+	 * Where to inject the SSG contents.
+	 * The first matching instance will be replaced by the SSG contents.
+	 * 
+	 * @default "__VUE_SSG__"
 	 */
-	target?: string;
+	target?: string | RegExp;
 
-	/** Additional processing of the HTML after inserting the SSG contents. */
+	/** Additional processing of the HTML after injecting the SSG contents. */
 	postProcess?: (html: string, entryName: string) => string;
 
 	/** Additional setups for the Vue {@link App} instance. */
 	appFactory?: (app: App, entryName: string) => void;
 
 	/**
-	 * Whether to register jsdom.
+	 * Whether to register and use jsdom.
+	 * 
 	 * Pass in a function for additional setups for the `globalThis` object.
+	 * For the sake of convenience, the object is given as `any` type,
+	 * making it easier to manipulate.
+	 * 
+	 * @default false
 	 */
 	jsdom?: boolean | ((global: any) => void);
 }
@@ -115,7 +140,10 @@ export const pluginVueSSG = (options: PluginVueSSGOptions): RsbuildPlugin => ({
 			async ({ assets, compilation, compiler }) => {
 				async function replace(html: string, assetName: string): Promise<void> {
 					const entryName = assetName.replace(HtmlRegex, "");
-					if(options.minify ?? true) html = patchScript(await minify(html, htmlMinOption));
+					if(options.minify ?? true) {
+						const minOption = typeof options.minify == "object" ? options.minify : htmlMinOption;
+						html = patchScript(await minify(html, minOption));
+					}
 					await htmlResolver.promise;
 					const result = results[entryName];
 					html = result ? html.replace(options.target ?? "__VUE_SSG__", result) : html;
