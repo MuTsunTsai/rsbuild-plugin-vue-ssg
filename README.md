@@ -1,6 +1,7 @@
 # Rsbuild-Plugin-Vue-SSG
 
 Generate Vue SSG contents and inject those into HTML for Rsbuild.
+Batteries included (html-minifier-terser and jsdom).
 
 ## Installation
 
