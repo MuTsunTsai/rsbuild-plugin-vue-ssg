@@ -1,6 +1,6 @@
 {
 	"name": "@mutsuntsai/rsbuild-plugin-vue-ssg",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"type": "module",
 	"exports": {
 		".": {
