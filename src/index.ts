@@ -27,7 +27,9 @@ const htmlMinOption: HtmlMinifierOptions = {
 export interface PluginVueSSGOptions {
 
 	/**
-	 * The entry SFC components corresponding to the web entries of Rsbuild.
+	 * The modules for the root components corresponding to the web entries of Rsbuild.
+	 * Each entry could be a SFC file, or any module that exports a Vue component as its default export.
+	 * 
 	 * Those web entries without a corresponding entry here will not be injected
 	 * (but will still be minified if enabled).
 	 */
@@ -43,7 +45,7 @@ export interface PluginVueSSGOptions {
 	 * Whether to minify the HTML.
 	 *
 	 * The minification will take place BEFORE injecting the SSG contents,
-	 * since the SSG contents typically includes HTML comment placeholders.
+	 * since the SSG contents typically include HTML comment placeholders.
 	 * This feature internally uses `html-minifier-terser`,
 	 * and you can also pass in an object to customize it.
 	 * 
@@ -52,7 +54,7 @@ export interface PluginVueSSGOptions {
 	 * ```js
 	 * {
 	 * 	collapseWhitespace: true,
-	 * 	collapseWhitespace: true,
+	 * 	removeComments: true,
 	 * 	minifyJS: {
 	 * 		ie8: true
 	 * 	}

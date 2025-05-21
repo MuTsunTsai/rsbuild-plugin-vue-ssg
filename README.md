@@ -9,6 +9,8 @@ Batteries included (html-minifier-terser and jsdom).
 pnpm add -D @mutsuntsai/rsbuild-plugin-vue-ssg
 ```
 
+Peer dependencies include: `@rsbuild/core`, `@rsbuild/plugin-vue`, `vue` (v3).
+
 ## Usage
 
 ```ts

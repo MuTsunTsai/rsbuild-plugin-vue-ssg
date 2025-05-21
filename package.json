@@ -24,9 +24,9 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.27.0",
-		"@rslib/core": "^0.7.1",
+		"@rslib/core": "^0.8.0",
 		"@types/html-minifier-terser": "^7.0.2",
-		"@types/node": "^22.15.19",
+		"@types/node": "^22.15.21",
 		"eslint": "^9.27.0",
 		"globals": "^16.1.0",
 		"typescript": "^5.8.3",
@@ -35,13 +35,13 @@
 	"dependencies": {
 		"global-jsdom": "^26.0.0",
 		"html-minifier-terser": "^7.2.0",
-		"jsdom": "^26.1.0",
-		"vue": "^3.5.14"
+		"jsdom": "^26.1.0"
 	},
 	"peerDependencies": {
-		"@rsbuild/core": "^1.1.14",
-		"@rsbuild/plugin-vue": "^1.0.7",
-		"@rspack/core": "^1.1.8"
+		"@rsbuild/core": "^1.1.0",
+		"@rsbuild/plugin-vue": "^1.0.0",
+		"@rspack/core": "^1.1.0",
+		"vue": "^3.0.0"
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [
